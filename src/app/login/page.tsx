@@ -5,39 +5,36 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-const signupSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
   password: z.string().min(8),
-  confirmPassword: z.string().min(8),
 });
 
-const onSubmit = (data: z.infer<typeof signupSchema>) => {
-  console.log("Submitting signup form", data);
+const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  console.log("Submitting login form", data);
 };
 
-export default function Signup() {
+export default function Login() {
   const router = useRouter();
 
-  const gotoLoginPage = useCallback(() => {
-    console.log("Navigating to login page");
+  const gotoSignupPage = useCallback(() => {
+    console.log("Navigating to signup page");
     
-    router.push("/login");
+    router.push("/signup");
   }, [router]);
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
       <DynamicForm
-        schema={signupSchema}
+        schema={loginSchema}
         primaryAction={{
-          text: "Signup",
+          text: "Login",
           onClick: onSubmit,
         }}
-        title="Signup"
+        title="Login"
         secondaryAction={{
-          text: "Go to Login",
-          onClick: gotoLoginPage,
+          text: "Go to Signup",
+          onClick: gotoSignupPage,
         }}
       />
     </main>
