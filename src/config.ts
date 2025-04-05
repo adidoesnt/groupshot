@@ -1,6 +1,7 @@
 const config = {
   app: {
-    name: "📸 Groupshot",
+    emoji: "📸",
+    name: "Groupshot",
     description: "For moments where you shouldn't be apart.",
     callToAction: {
       buttonText: {
