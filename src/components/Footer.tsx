@@ -12,7 +12,7 @@ export default function Footer({ className }: FooterProps) {
 
   return (
     <footer
-      className={`flex w-full justify-between text-sm font-sans ${className}`}
+      className={`flex text-xs items-start md:text-sm md:flex-row flex-col w-full justify-between md:items-center font-sans ${className}`}
     >
       <p>{footer.text}</p>
       <p>
@@ -24,6 +24,7 @@ export default function Footer({ className }: FooterProps) {
         >
           Icons8
         </Link>
+        .
       </p>
     </footer>
   );
