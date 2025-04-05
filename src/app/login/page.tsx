@@ -19,7 +19,7 @@ export default function Login() {
 
   const gotoSignupPage = useCallback(() => {
     console.log("Navigating to signup page");
-    
+
     router.push("/signup");
   }, [router]);
 
