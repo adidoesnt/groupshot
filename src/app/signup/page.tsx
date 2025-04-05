@@ -25,6 +25,12 @@ export default function Signup() {
     router.push("/login");
   }, [router]);
 
+  const gotoLandingPage = useCallback(() => {
+    console.log("Navigating to landing page");
+
+    router.push("/");
+  }, [router]);
+
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
       <DynamicForm
@@ -38,6 +44,7 @@ export default function Signup() {
           text: "Go to Login",
           onClick: gotoLoginPage,
         }}
+        backFunction={gotoLandingPage}
       />
     </main>
   );

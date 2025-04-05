@@ -7,6 +7,7 @@ import { camelCaseToWords } from "@/utils/string";
 import { useCallback, useMemo, useState } from "react";
 import { HidePasswordIcon } from "@/icons/HidePassword";
 import { ShowPasswordIcon } from "@/icons/ShowPassword";
+import BackIcon from "@/icons/BackArrow";
 
 enum InputType {
   TEXT = "text",
@@ -28,6 +29,7 @@ type DynamicFormProps<T extends ZodRawShape> = {
     text: string;
     onClick: () => void;
   };
+  backFunction?: () => void;
 };
 
 export default function DynamicForm<T extends ZodRawShape>({
@@ -35,10 +37,11 @@ export default function DynamicForm<T extends ZodRawShape>({
   schema,
   primaryAction,
   secondaryAction,
+  backFunction,
 }: DynamicFormProps<T>) {
   type FormData = z.infer<ZodObject<T>>;
   const [showPassword, setShowPassword] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -59,7 +62,14 @@ export default function DynamicForm<T extends ZodRawShape>({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold font-mono">{title}</h1>
+      <div className="flex items-center gap-4">
+        {backFunction && (
+          <button type="button" onClick={backFunction}>
+            <BackIcon className="w-4 h-4" />
+          </button>
+        )}
+        <h1 className="text-2xl font-bold font-mono">{title}</h1>
+      </div>
       <hr className="w-full border-2" />
       <form
         onSubmit={handleSubmit(primaryAction.onClick)}
