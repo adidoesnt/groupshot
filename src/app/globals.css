@@ -1,16 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --primary-action: #ff8a5c; /* Vibrant Peach */
+  --secondary-action: #2d3a6a; /* Deep Blue */
+  --secondary-action-alt: #4d6b56; /* Slate Green */
+
+  /* Background Colors */
+  --background-primary: #f2f2f2; /* Cool Grey */
+  --background-alt: #ffffff; /* Off-White */
+
+  /* Text Colors */
+  --text-primary: #333333; /* Dark Charcoal */
+  --text-accent: #f4e04d; /* Soft Lemon */
+
+  /* Accent Colors */
+  --accent-card: #d8c1a1; /* Warm Taupe */
+  --accent-muted: #b2b2b2; /* Light Charcoal */
+
+  /* Neutral Tones */
+  --neutral-border: #b2b2b2; /* Light Charcoal */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Background and Foreground */
+  --color-background: var(--background-primary);
+  --color-foreground: var(--text-primary);
+
+  /* Primary Colors */
+  --color-primary-action: var(--primary-action); /* Vibrant Peach */
+  --color-secondary-action: var(--secondary-action); /* Deep Blue */
+  --color-secondary-action-alt: var(--secondary-action-alt); /* Slate Green */
+
+  /* Background Colors */
+  --color-background-primary: var(--background-primary); /* Cool Grey */
+  --color-background-alt: var(--background-alt); /* Off-White */
+
+  /* Text Colors */
+  --color-text-primary: var(--text-primary); /* Dark Charcoal */
+  --color-text-accent: var(--text-accent); /* Soft Lemon */
+
+  /* Accent Colors */
+  --color-accent-card: var(--accent-card); /* Warm Taupe */
+  --color-accent-muted: var(--accent-muted); /* Light Charcoal */
+
+  /* Neutral Tones */
+  --color-neutral-border: var(--neutral-border); /* Light Charcoal */
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
