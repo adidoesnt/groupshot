@@ -4,7 +4,7 @@ import { z, ZodTypeAny, ZodObject, ZodRawShape } from "zod";
 import { useForm, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { camelCaseToWords } from "@/utils/string";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { HidePasswordIcon } from "@/icons/HidePassword";
 import { ShowPasswordIcon } from "@/icons/ShowPassword";
 
@@ -47,6 +47,10 @@ export default function DynamicForm<T extends ZodRawShape>({
     resolver: zodResolver(schema),
   });
 
+  const isPasswordField = useCallback((fieldKey: string) => {
+    return fieldKey.toLowerCase().includes("password");
+  }, []);
+
   const fields = Object.entries(schema.shape) as [keyof FormData, ZodTypeAny][];
 
   const isSubmitDisabled = useMemo(() => {
@@ -77,7 +81,7 @@ export default function DynamicForm<T extends ZodRawShape>({
               inputType = InputType.TEXT;
           }
 
-          if (fieldKey.includes("password")) {
+          if (isPasswordField(fieldKey)) {
             inputType = InputType.PASSWORD;
           }
 

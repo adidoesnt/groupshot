@@ -5,13 +5,14 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-const signupSchema = z.object({
-  email: z.string().email(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
-});
+const signupSchema = z
+  .object({
+    email: z.string().email(),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    password: z.string().min(8),
+  })
+
 
 const onSubmit = (data: z.infer<typeof signupSchema>) => {
   console.log("Submitting signup form", data);
@@ -22,7 +23,7 @@ export default function Signup() {
 
   const gotoLoginPage = useCallback(() => {
     console.log("Navigating to login page");
-    
+
     router.push("/login");
   }, [router]);
 
