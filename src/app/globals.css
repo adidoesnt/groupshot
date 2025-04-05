@@ -47,6 +47,9 @@
   /* Neutral Tones */
   --color-neutral-border: var(--neutral-border); /* Light Charcoal */
 
+  /* Error Colors */
+  --color-error: #ff0000; /* Red */
+
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
