@@ -1,5 +1,5 @@
 type ButtonProps = {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   onClick: () => void;
   children?: React.ReactNode;
   className?: string;
@@ -14,7 +14,7 @@ export default function Button({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center gap-2 ${className}`}
+      className={`flex items-center justify-center gap-2 cursor-pointer ${className}`}
     >
       {icon}
       {children}

@@ -2,11 +2,14 @@
 
 import { useAuth } from "../lib/context/AmplifyProvider";
 import StatefulSidebar from "../lib/components/StatefulSidebar";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const { getCurrentUser } = useAuth();
-
+  const router = useRouter();
+  const { getCurrentUser, isAuthenticated } = useAuth();
   const user = getCurrentUser();
+
+  if (!isAuthenticated) router.push("/login");
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
