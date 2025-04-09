@@ -43,9 +43,12 @@ export default function Signup() {
         },
       });
 
-      console.log("User signed up", userId);
+      console.log("User signed up", {
+        userId,
+        email: data.email,
+      });
 
-      redirect(`/confirm-signup?userId=${userId}`);
+      redirect(`/confirm-signup?email=${data.email}`);
     } catch (error) {
       console.error("Error signing up", error);
     }
