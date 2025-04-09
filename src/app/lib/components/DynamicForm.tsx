@@ -41,7 +41,7 @@ export default function DynamicForm<T extends ZodRawShape>({
 }: DynamicFormProps<T>) {
   type FormData = z.infer<ZodObject<T>>;
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -142,14 +142,14 @@ export default function DynamicForm<T extends ZodRawShape>({
             <button
               type="button"
               onClick={secondaryAction.onClick}
-              className="hover:border-b-[1px] hover:opacity-70 border-foreground text-foreground p-2 w-full transition-all duration-200"
+              className="hover:border-b-[1px] hover:opacity-70 border-foreground text-foreground p-2 w-full transition-all duration-200 text-nowrap"
             >
               {secondaryAction.text}
             </button>
           )}
           <button
             type="submit"
-            className="hover:border-b-[1px] hover:opacity-70 border-primary-action text-primary-action p-2 w-full transition-all duration-200 disabled:opacity-50 disabled:border-none disabled:cursor-not-allowed disabled:text-gray-400"
+            className="hover:border-b-[1px] hover:opacity-70 border-primary-action text-primary-action p-2 w-full transition-all duration-200 disabled:opacity-50 disabled:border-none disabled:cursor-not-allowed disabled:text-gray-400 text-nowrap"
             disabled={isSubmitDisabled}
           >
             {primaryAction.text}

@@ -4,13 +4,15 @@ import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
 import { useCallback } from "react";
 import { confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const confirmSignupSchema = z.object({
   code: z.string().min(6),
 });
 
 export default function ConfirmSignup() {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
@@ -46,12 +48,12 @@ export default function ConfirmSignup() {
 
         console.log("Signup confirmed, redirecting to login");
 
-        redirect("/login");
+        router.push("/login");
       } catch (error) {
         console.error(`Error confirming signup for email ${email}`, error);
       }
     },
-    [email]
+    [email, router]
   );
 
   return (

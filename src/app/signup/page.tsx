@@ -2,7 +2,7 @@
 
 import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { signUp } from "aws-amplify/auth";
 
@@ -14,49 +14,58 @@ const signupSchema = z.object({
 });
 
 export default function Signup() {
+  const router = useRouter();
+
   const gotoLoginPage = useCallback(() => {
     console.log("Navigating to login page");
 
-    redirect("/login");
-  }, []);
+    router.push("/login");
+  }, [router]);
 
   const gotoLandingPage = useCallback(() => {
     console.log("Navigating to landing page");
 
-    redirect("/");
-  }, []);
+    router.push("/");
+  }, [router]);
 
-  const onSubmit = useCallback(async (data: z.infer<typeof signupSchema>) => {
-    console.log("Submitting signup form", data);
+  const onSubmit = useCallback(
+    async (data: z.infer<typeof signupSchema>) => {
+      console.log("Submitting signup form", data);
 
-    try {
-      const { userId, nextStep } = await signUp({
-        username: data.email,
-        password: data.password,
-        options: {
-          userAttributes: {
-            email: data.email,
-            given_name: data.firstName,
-            family_name: data.lastName,
+      try {
+        const { userId, nextStep } = await signUp({
+          username: data.email,
+          password: data.password,
+          options: {
+            userAttributes: {
+              email: data.email,
+              given_name: data.firstName,
+              family_name: data.lastName,
+            },
+            autoSignIn: true,
           },
-          autoSignIn: true,
-        },
-      });
+        });
 
-      console.log("User signed up", {
-        userId,
-        email: data.email,
-      });
+        console.log("User signed up", {
+          userId,
+          email: data.email,
+        });
 
-      if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-        redirect(`/confirm-signup?email=${data.email}`);
-      } else {
-        redirect(`/login`);
+        if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+          console.log("Redirecting to confirm signup");
+
+          router.push(`/confirm-signup?email=${data.email}`);
+        } else {
+          console.log("Signup successful, redirecting to login");
+
+          router.push(`/login`);
+        }
+      } catch (error) {
+        console.error("Error signing up", error);
       }
-    } catch (error) {
-      console.error("Error signing up", error);
-    }
-  }, []);
+    },
+    [router]
+  );
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">

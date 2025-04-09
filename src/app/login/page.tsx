@@ -2,7 +2,7 @@
 
 import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { resendSignUpCode, signIn } from "aws-amplify/auth";
 
@@ -44,16 +44,16 @@ export default function Login() {
 
         console.log("Code resent, redirecting to confirm signup");
 
-        redirect(`/confirm-signup?email=${data.email}`);
+        router.push(`/confirm-signup?email=${data.email}`);
       } else {
         console.log("Login successful, redirecting to landing page");
 
-        redirect("/dashboard");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error(`Error logging in for email ${data.email}`, error);
     }
-  }, []);
+  }, [router]);
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
