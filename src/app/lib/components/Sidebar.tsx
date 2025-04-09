@@ -71,7 +71,7 @@ export default function Sidebar({ children, title }: SidebarProps) {
             >
               <div
                 id="sidebar"
-                className="flex flex-col justify-start items-center gap-4 md:w-1/3 w-full h-full bg-background text-foreground"
+                className="flex flex-col justify-start items-center gap-4 md:min-w-1/4 w-full md:w-fit h-full bg-background text-foreground"
               >
                 <div className="flex w-full justify-between items-center p-4 border-b-2">
                   <h1 className="text-2xl font-bold font-mono">{title}</h1>
