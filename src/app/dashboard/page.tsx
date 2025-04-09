@@ -1,5 +1,3 @@
-"use client";
-
 import { useAuth } from "../lib/context/AmplifyProvider";
 
 export default function Dashboard() {
@@ -8,9 +6,9 @@ export default function Dashboard() {
   const user = getCurrentUser();
 
   return (
-    <div>
+    <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
       <h1>Dashboard</h1>
       <p>Welcome {user?.email}</p>
-    </div>
+    </main>
   );
 }
