@@ -10,7 +10,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.5.8",
     "@hookform/resolvers": "^5.0.1",
+    "aws-amplify": "^6.14.1",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
