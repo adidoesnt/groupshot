@@ -2,20 +2,10 @@
 
 import { useAuth } from "../lib/context/AmplifyProvider";
 import StatefulSidebar from "../lib/components/StatefulSidebar";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { getCurrentUser, isAuthenticated } = useAuth();
+  const { getCurrentUser } = useAuth();
   const user = getCurrentUser();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      console.log("Not authenticated, redirecting to login");
-      router.push("/login");
-    }
-  }, [isAuthenticated, router]);
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">

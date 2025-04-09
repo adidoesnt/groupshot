@@ -2,6 +2,8 @@
 
 import { useAuth } from "../context/AmplifyProvider";
 import Button from "./Button";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 type LogoutButtonProps = {
   className?: string;
@@ -9,9 +11,15 @@ type LogoutButtonProps = {
 
 export default function LogoutButton({ className }: LogoutButtonProps) {
   const { logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+    router.push("/login");
+  }, [logout, router]);
 
   return (
-    <Button onClick={logout} className={className}>
+    <Button onClick={handleLogout} className={className}>
       Logout
     </Button>
   );

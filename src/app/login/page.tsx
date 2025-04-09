@@ -3,7 +3,7 @@
 import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { resendSignUpCode, signIn } from "aws-amplify/auth";
 import StatefulSidebar from "../lib/components/StatefulSidebar";
 import { useAuth } from "../lib/context/AmplifyProvider";
@@ -15,15 +15,7 @@ const loginSchema = z.object({
 
 export default function Login() {
   const router = useRouter();
-  const { isAuthenticated, setCurrentUser } = useAuth();
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated && !isLoggingIn) {
-      console.log("Already authenticated, redirecting to dashboard");
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router, isLoggingIn]);
+  const { setCurrentUser } = useAuth();
 
   const gotoSignupPage = useCallback(() => {
     console.log("Navigating to signup page");
@@ -38,7 +30,6 @@ export default function Login() {
   const onSubmit = useCallback(
     async (data: z.infer<typeof loginSchema>) => {
       console.log("Submitting login form", data);
-      setIsLoggingIn(true);
 
       try {
         const { nextStep } = await signIn({
@@ -62,8 +53,6 @@ export default function Login() {
         }
       } catch (error) {
         console.error(`Error logging in for email ${data.email}`, error);
-      } finally {
-        setIsLoggingIn(false);
       }
     },
     [router, setCurrentUser]

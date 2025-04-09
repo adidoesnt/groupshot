@@ -1,7 +1,7 @@
 "use client";
 
-import { Amplify, type ResourcesConfig } from "aws-amplify";
-import { COGNITO_CLIENT_ID, COGNITO_USER_POOL_ID } from "../constants";
+import { Amplify } from "aws-amplify";
+import { authConfig } from "../constants";
 import {
   createContext,
   useCallback,
@@ -18,13 +18,6 @@ import {
   FetchUserAttributesOutput,
 } from "aws-amplify/auth";
 import { redirect } from "next/navigation";
-
-export const authConfig: ResourcesConfig["Auth"] = {
-  Cognito: {
-    userPoolId: COGNITO_USER_POOL_ID,
-    userPoolClientId: COGNITO_CLIENT_ID,
-  },
-};
 
 Amplify.configure(
   {

@@ -3,10 +3,9 @@
 import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { signUp } from "aws-amplify/auth";
 import StatefulSidebar from "../lib/components/StatefulSidebar";
-import { useAuth } from "../lib/context/AmplifyProvider";
 
 const signupSchema = z.object({
   email: z.string().email(),
@@ -17,7 +16,6 @@ const signupSchema = z.object({
 
 export default function Signup() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
 
   const gotoLoginPage = useCallback(() => {
     console.log("Navigating to login page");
@@ -69,13 +67,6 @@ export default function Signup() {
     },
     [router]
   );
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      console.log("Authenticated, redirecting to dashboard");
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
