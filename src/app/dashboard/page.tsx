@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "../lib/context/AmplifyProvider";
 
 export default function Dashboard() {
