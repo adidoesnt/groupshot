@@ -3,7 +3,7 @@
 import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { resendSignUpCode, signIn } from "aws-amplify/auth";
 import StatefulSidebar from "../lib/components/StatefulSidebar";
 import { useAuth } from "../lib/context/AmplifyProvider";
@@ -15,14 +15,15 @@ const loginSchema = z.object({
 
 export default function Login() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, setCurrentUser } = useAuth();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      console.log("Authenticated, redirecting to dashboard");
+    if (isAuthenticated && !isLoggingIn) {
+      console.log("Already authenticated, redirecting to dashboard");
       router.push("/dashboard");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, isLoggingIn]);
 
   const gotoSignupPage = useCallback(() => {
     console.log("Navigating to signup page");
@@ -39,6 +40,7 @@ export default function Login() {
   const onSubmit = useCallback(
     async (data: z.infer<typeof loginSchema>) => {
       console.log("Submitting login form", data);
+      setIsLoggingIn(true);
 
       try {
         const { nextStep } = await signIn({
@@ -55,14 +57,18 @@ export default function Login() {
           console.log("Code resent, redirecting to confirm signup");
           router.push(`/confirm-signup?email=${data.email}`);
         } else {
-          console.log("Login successful, redirecting to dashboard");
+          console.log("Login successful, updating user state");
+          await setCurrentUser();
+          console.log("User state updated, redirecting to dashboard");
           router.push("/dashboard");
         }
       } catch (error) {
         console.error(`Error logging in for email ${data.email}`, error);
+      } finally {
+        setIsLoggingIn(false);
       }
     },
-    [router]
+    [router, setCurrentUser]
   );
 
   return (
