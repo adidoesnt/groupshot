@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
     const user = await checkIsAuthenticated(context);
 
-    if (!user && pathname !== "/login") {
+    if (!user && !publicPaths.includes(pathname)) {
       console.log("User is not authenticated, redirecting to login");
       const loginUrl = new URL("/login", request.url);
       return NextResponse.redirect(loginUrl);
