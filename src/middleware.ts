@@ -6,6 +6,7 @@ import { NextServer } from "@aws-amplify/adapter-nextjs";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const publicPaths = ["/", "/login", "/signup", "/confirm-signup"];
+  const adminPaths = ["/admin"];
 
   try {
     const context: NextServer.Context = {
@@ -19,6 +20,12 @@ export async function middleware(request: NextRequest) {
       console.log("User is not authenticated, redirecting to login");
       const loginUrl = new URL("/login", request.url);
       return NextResponse.redirect(loginUrl);
+    }
+
+    if (!user?.isAdmin && adminPaths.includes(pathname)) {
+      console.log("User is not an admin, redirecting to dashboard");
+      const dashboardUrl = new URL("/dashboard", request.url);
+      return NextResponse.redirect(dashboardUrl);
     }
 
     if (publicPaths.includes(pathname) && user) {
