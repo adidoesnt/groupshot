@@ -41,12 +41,14 @@ type AmplifyContextType = {
   logout: () => Promise<void>;
   getCurrentUser: () => User | null;
   setCurrentUser: () => Promise<void>;
+  isAuthenticated: boolean;
 };
 
 const AmplifyContext = createContext<AmplifyContextType>({
   logout: async () => {},
   getCurrentUser: () => null,
   setCurrentUser: async () => {},
+  isAuthenticated: false,
 });
 
 type AmplifyProviderProps = {
@@ -99,9 +101,13 @@ export const AmplifyProvider = ({ children }: AmplifyProviderProps) => {
     }
   }, []);
 
+  const isAuthenticated = useMemo(() => {
+    return !!getCurrentUser();
+  }, [getCurrentUser]);
+
   const context = useMemo(
-    () => ({ logout, getCurrentUser, setCurrentUser }),
-    [logout, getCurrentUser, setCurrentUser]
+    () => ({ logout, getCurrentUser, setCurrentUser, isAuthenticated }),
+    [logout, getCurrentUser, setCurrentUser, isAuthenticated]
   );
 
   useEffect(() => {

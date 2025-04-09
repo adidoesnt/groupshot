@@ -15,6 +15,34 @@ const config = {
     footer: {
       text: "© 2025 Aditya Banerjee. All rights reserved.",
     },
+    sidebar: {
+      authenticated: {
+        title: "Menu",
+        items: [
+          {
+            label: "Dashboard",
+            href: "/dashboard",
+          },
+        ],
+      },
+      unauthenticated: {
+        title: "Menu",
+        items: [
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label: "Sign Up",
+            href: "/signup",
+          },
+          {
+            label: "Login",
+            href: "/login",
+          },
+        ],
+      },
+    },
   },
 };
 
