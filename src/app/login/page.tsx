@@ -1,6 +1,6 @@
 "use client";
 
-import DynamicForm from "@/components/DynamicForm";
+import DynamicForm from "@/app/lib/components/DynamicForm";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";

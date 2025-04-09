@@ -3,11 +3,11 @@
 import { z, ZodTypeAny, ZodObject, ZodRawShape } from "zod";
 import { useForm, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { camelCaseToWords } from "@/utils/string";
+import { camelCaseToWords } from "@/app/lib/utils/string";
 import { useCallback, useMemo, useState } from "react";
-import { HidePasswordIcon } from "@/icons/HidePassword";
-import { ShowPasswordIcon } from "@/icons/ShowPassword";
-import BackIcon from "@/icons/BackArrow";
+import { HidePasswordIcon } from "@/app/lib/icons/HidePassword";
+import { ShowPasswordIcon } from "@/app/lib/icons/ShowPassword";
+import BackIcon from "@/app/lib/icons/BackArrow";
 
 enum InputType {
   TEXT = "text",

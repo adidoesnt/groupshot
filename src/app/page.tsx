@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
-import config from "@/config";
+import Footer from "@/app/lib/components/Footer";
+import config from "@/app/lib/config";
 import "./globals.css";
 import Link from "next/link";
 
