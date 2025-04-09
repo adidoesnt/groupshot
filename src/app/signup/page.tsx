@@ -30,7 +30,7 @@ export default function Signup() {
     console.log("Submitting signup form", data);
 
     try {
-      const { userId } = await signUp({
+      const { userId, nextStep } = await signUp({
         username: data.email,
         password: data.password,
         options: {
@@ -48,7 +48,11 @@ export default function Signup() {
         email: data.email,
       });
 
-      redirect(`/confirm-signup?email=${data.email}`);
+      if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+        redirect(`/confirm-signup?email=${data.email}`);
+      } else {
+        redirect(`/login`);
+      }
     } catch (error) {
       console.error("Error signing up", error);
     }
