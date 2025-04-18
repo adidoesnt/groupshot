@@ -6,7 +6,7 @@ import { useUserProfile } from "../lib/context/UserProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Dashboard() {
+export default function Onboarding() {
   const { getCurrentUser } = useAuth();
   const user = getCurrentUser();
 
@@ -16,8 +16,8 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    if (userProfile && !userProfile.onboardingCompleted) {
-      router.push(`/onboarding?id=${userProfile.id}`);
+    if (userProfile?.onboardingCompleted) {
+      router.push(`/dashboard`);
     }
   }, [userProfile, router]);
 
@@ -25,8 +25,10 @@ export default function Dashboard() {
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
       <StatefulSidebar />
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold font-mono">Dashboard</h1>
-        <p className="text-sm font-sans">Welcome {user?.given_name}!</p>
+        <h1 className="text-2xl font-bold font-mono">Onboarding</h1>
+        <p className="text-sm font-sans">
+          Welcome {user?.given_name}! We just have a few more things to set up.
+        </p>
       </div>
     </main>
   );

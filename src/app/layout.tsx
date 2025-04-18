@@ -5,6 +5,7 @@ import { AmplifyProvider } from "./lib/context/AmplifyProvider";
 import config from "./lib/config";
 import { Suspense } from "react";
 import Loading from "./lib/components/Loading";
+import { UserProvider } from "./lib/context/UserProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Suspense fallback={<Loading />}>
-          <AmplifyProvider>{children}</AmplifyProvider>
+          <AmplifyProvider>
+            <UserProvider>{children}</UserProvider>
+          </AmplifyProvider>
         </Suspense>
       </body>
     </html>
