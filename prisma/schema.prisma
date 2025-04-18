@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id // From Cognito
+
+  email     String @unique
+  firstName String
+  lastName  String
+
+  subscriptions UserSubscription[]
+
+  profilePictureUrl String? // From S3
+
+  friendshipsAsUser1 Friendship[] @relation("User1")
+  friendshipsAsUser2 Friendship[] @relation("User2")
+
+  generatedPhotos GeneratedPhoto[]
+  appearances     GeneratedPhotoAppearances[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Friendship {
+  user1Id String
+  user2Id String
+
+  user1 User @relation("User1", fields: [user1Id], references: [id])
+  user2 User @relation("User2", fields: [user2Id], references: [id])
+
+  confirmed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([user1Id, user2Id]) // Sort before inserting
+}
+
+model GeneratedPhoto {
+  id String @id
+
+  url String @unique // From S3
+
+  createdByUserId String
+  createdByUser   User   @relation(fields: [createdByUserId], references: [id])
+
+  appearingUsers GeneratedPhotoAppearances[]
+
+  confirmed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GeneratedPhotoAppearances {
+  generatedPhotoId String
+  userId           String
+
+  generatedPhoto GeneratedPhoto @relation(fields: [generatedPhotoId], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
+
+  approved Boolean @default(false)
+
+  @@id([generatedPhotoId, userId]) // composite primary key
+}
+
+model Subscription {
+  id String @id
+
+  tier  SubscriptionTier
+  users UserSubscription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SubscriptionTier {
+  FREE
+  PLUS
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model UserSubscription {
+  userId         String
+  subscriptionId String
+
+  startDate      DateTime
+  endDate        DateTime?
+  cancelledAt    DateTime?
+
+  status         SubscriptionStatus
+
+  user         User         @relation(fields: [userId], references: [id])
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, subscriptionId, status]) // composite primary key
+}
