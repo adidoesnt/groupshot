@@ -66,33 +66,23 @@ export default function Signup() {
           email: data.email,
         });
 
-        const createUserPayload = {
-          id: userId as string, // schema validation should catch if undefined
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
-        };
-
         if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-          console.log(
-            "Creating user in database, redirecting to confirm signup"
+          console.log("Signup successful, redirecting to confirm signup");
+
+          router.push(
+            `/confirm-signup?email=${data.email}&id=${userId}&firstName=${data.firstName}&lastName=${data.lastName}`
           );
-
-          // If confirmation is required, user should not be enabled
-          await createUser({
-            ...createUserPayload,
-            enabled: false,
-          } satisfies CreateUserRequest);
-
-          router.push(`/confirm-signup?email=${data.email}`);
         } else {
           console.log("Cognito signup successful, creating user in database");
 
-          // If confirmation is not required, user should be enabled
           await createUser({
-            ...createUserPayload,
-            enabled: true,
+            id: userId as string, // schema validation should catch if undefined
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
           } satisfies CreateUserRequest);
+
+          console.log("User created successfully, redirecting to login");
 
           router.push(`/login`);
         }

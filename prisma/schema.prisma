@@ -16,7 +16,6 @@ model User {
   lastName  String
 
   onboardingCompleted Boolean? @default(false)
-  enabled            Boolean? @default(false)
 
   subscriptions UserSubscription[]
 

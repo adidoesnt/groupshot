@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useCallback } from "react";
 import { confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { UpdateUserRequest } from "@/app/api/user/types";
+import { CreateUserRequest } from "../api/user/types";
 
 const confirmSignupSchema = z.object({
   code: z.string().min(6),
@@ -16,6 +16,9 @@ export default function ConfirmSignup() {
 
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const id = searchParams.get("id");
+  const firstName = searchParams.get("firstName");
+  const lastName = searchParams.get("lastName");
 
   const handleResendCode = useCallback(async () => {
     console.log("Resending code");
@@ -33,19 +36,14 @@ export default function ConfirmSignup() {
     }
   }, [email]);
 
-  const enableUser = useCallback(async (userId: string | undefined) => {
+  const createUser = useCallback(async (user: CreateUserRequest) => {
     const response = await fetch("/api/user", {
-      method: "PUT",
-      body: JSON.stringify({
-        id: userId as string, // schema validation should catch if undefined
-        updates: {
-          enabled: true,
-        },
-      } satisfies UpdateUserRequest),
+      method: "POST",
+      body: JSON.stringify(user),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to enable user");
+      throw new Error("Failed to create user");
     }
 
     return response.json();
@@ -60,22 +58,26 @@ export default function ConfirmSignup() {
           throw new Error("Email is required");
         }
 
-        const { userId } = await confirmSignUp({
+        await confirmSignUp({
           username: email,
           confirmationCode: data.code,
         });
 
-        console.log("Signup confirmed, enabling user in database");
+        console.log("Signup confirmed, creating user in database");
 
-        // If we reach this page, user needs to be enabled
-        await enableUser(userId);
+        await createUser({
+          id: id as string, // schema validation should catch if null
+          email,
+          firstName: firstName as string, // schema validation should catch if null
+          lastName: lastName as string, // schema validation should catch if null
+        } satisfies CreateUserRequest);
 
         router.push("/login");
       } catch (error) {
         console.error(`Error confirming signup for email ${email}`, error);
       }
     },
-    [email, router, enableUser]
+    [email, router, createUser, id, firstName, lastName]
   );
 
   return (
