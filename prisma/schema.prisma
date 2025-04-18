@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../src/app/prisma"
 }
 
 datasource db {
@@ -15,7 +15,8 @@ model User {
   firstName String
   lastName  String
 
-  onboardingCompleted Boolean @default(false)
+  onboardingCompleted Boolean? @default(false)
+  enabled            Boolean? @default(false)
 
   subscriptions UserSubscription[]
 
@@ -27,8 +28,8 @@ model User {
   generatedPhotos GeneratedPhoto[]
   appearances     GeneratedPhotoAppearances[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Friendship {

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useCallback } from "react";
 import { confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
 import { useRouter, useSearchParams } from "next/navigation";
+import type { UpdateUserRequest } from "@/app/api/user/types";
 
 const confirmSignupSchema = z.object({
   code: z.string().min(6),
@@ -32,6 +33,24 @@ export default function ConfirmSignup() {
     }
   }, [email]);
 
+  const enableUser = useCallback(async (userId: string | undefined) => {
+    const response = await fetch("/api/user", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: userId as string, // schema validation should catch if undefined
+        updates: {
+          enabled: true,
+        },
+      } satisfies UpdateUserRequest),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to enable user");
+    }
+
+    return response.json();
+  }, []);
+
   const onSubmit = useCallback(
     async (data: z.infer<typeof confirmSignupSchema>) => {
       console.log("Submitting confirm signup form", data);
@@ -41,19 +60,22 @@ export default function ConfirmSignup() {
           throw new Error("Email is required");
         }
 
-        await confirmSignUp({
+        const { userId } = await confirmSignUp({
           username: email,
           confirmationCode: data.code,
         });
 
-        console.log("Signup confirmed, redirecting to login");
+        console.log("Signup confirmed, enabling user in database");
+
+        // If we reach this page, user needs to be enabled
+        await enableUser(userId);
 
         router.push("/login");
       } catch (error) {
         console.error(`Error confirming signup for email ${email}`, error);
       }
     },
-    [email, router]
+    [email, router, enableUser]
   );
 
   return (
