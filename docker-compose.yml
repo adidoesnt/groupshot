@@ -6,6 +6,6 @@ services:
       POSTGRES_PASSWORD: groupshot
       POSTGRES_DB: groupshot
     ports:
-      - 5433:5432
+      - 5433:5432 # Can't use 5432 because psql service is already running on port 5432 on my machine
     volumes:
       - ./prisma/postgres-data:/var/lib/postgresql/data
