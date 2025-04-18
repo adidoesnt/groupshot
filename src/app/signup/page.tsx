@@ -46,48 +46,44 @@ export default function Signup() {
   const onSubmit = useCallback(
     async (data: z.infer<typeof signupSchema>) => {
       console.log("Submitting signup form", data);
-
-      try {
-        const { userId, nextStep } = await signUp({
-          username: data.email,
-          password: data.password,
-          options: {
-            userAttributes: {
-              email: data.email,
-              given_name: data.firstName,
-              family_name: data.lastName,
-            },
-            autoSignIn: true,
-          },
-        });
-
-        console.log("User signed up", {
-          userId,
-          email: data.email,
-        });
-
-        if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-          console.log("Signup successful, redirecting to confirm signup");
-
-          router.push(
-            `/confirm-signup?email=${data.email}&id=${userId}&firstName=${data.firstName}&lastName=${data.lastName}`
-          );
-        } else {
-          console.log("Cognito signup successful, creating user in database");
-
-          await createUser({
-            id: userId as string, // schema validation should catch if undefined
+      
+      const { userId, nextStep } = await signUp({
+        username: data.email,
+        password: data.password,
+        options: {
+          userAttributes: {
             email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-          } satisfies CreateUserRequest);
+            given_name: data.firstName,
+            family_name: data.lastName,
+          },
+          autoSignIn: true,
+        },
+      });
 
-          console.log("User created successfully, redirecting to login");
+      console.log("User signed up", {
+        userId,
+        email: data.email,
+      });
 
-          router.push(`/login`);
-        }
-      } catch (error) {
-        console.error("Error signing up", error);
+      if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+        console.log("Signup successful, redirecting to confirm signup");
+
+        router.push(
+          `/confirm-signup?email=${data.email}&id=${userId}&firstName=${data.firstName}&lastName=${data.lastName}`
+        );
+      } else {
+        console.log("Cognito signup successful, creating user in database");
+
+        await createUser({
+          id: userId as string, // schema validation should catch if undefined
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        } satisfies CreateUserRequest);
+
+        console.log("User created successfully, redirecting to login");
+
+        router.push(`/login`);
       }
     },
     [router, createUser]

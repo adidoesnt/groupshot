@@ -23,7 +23,7 @@ type DynamicFormProps<T extends ZodRawShape> = {
   schema: ZodObject<T>;
   primaryAction: {
     text: string;
-    onClick: (data: z.infer<ZodObject<T>>) => void;
+    onClick: (data: z.infer<ZodObject<T>>) => Promise<void>;
   };
   secondaryAction?: {
     text: string;
@@ -46,9 +46,19 @@ export default function DynamicForm<T extends ZodRawShape>({
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  const onSubmit = useCallback(async (data: FormData) => {
+    try {
+      await primaryAction.onClick(data);
+    } catch (e) {
+      const error = e as Error;
+      setError("root", { message: error.message });
+    }
+  }, [primaryAction, setError]);
 
   const isPasswordField = useCallback((fieldKey: string) => {
     return fieldKey.toLowerCase().includes("password");
@@ -72,7 +82,7 @@ export default function DynamicForm<T extends ZodRawShape>({
       </div>
       <hr className="w-full border-2" />
       <form
-        onSubmit={handleSubmit(primaryAction.onClick)}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
         {fields.map(([key, value]) => {
@@ -130,13 +140,18 @@ export default function DynamicForm<T extends ZodRawShape>({
                 </div>
               </div>
               {errors[key] && (
-                <span className="text-error">
+                <span className="text-error text-sm font-mono">
                   {errors[key]?.message as string}
                 </span>
               )}
             </div>
           );
         })}
+        {errors.root && (
+          <span className="text-error text-sm font-mono">
+            {errors.root?.message as string}
+          </span>
+        )}
         <div className="flex gap-2">
           {secondaryAction && (
             <button

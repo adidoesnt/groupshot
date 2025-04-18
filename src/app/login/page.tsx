@@ -30,29 +30,25 @@ export default function Login() {
   const onSubmit = useCallback(
     async (data: z.infer<typeof loginSchema>) => {
       console.log("Submitting login form", data);
+      
+      const { nextStep } = await signIn({
+        username: data.email,
+        password: data.password,
+      });
 
-      try {
-        const { nextStep } = await signIn({
+      if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+        console.log("Incomplete signup, resending code");
+        await resendSignUpCode({
           username: data.email,
-          password: data.password,
         });
 
-        if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
-          console.log("Incomplete signup, resending code");
-          await resendSignUpCode({
-            username: data.email,
-          });
-
-          console.log("Code resent, redirecting to confirm signup");
-          router.push(`/confirm-signup?email=${data.email}`);
-        } else {
-          console.log("Login successful, updating user state");
-          await setCurrentUser();
-          console.log("User state updated, redirecting to dashboard");
-          router.push("/dashboard");
-        }
-      } catch (error) {
-        console.error(`Error logging in for email ${data.email}`, error);
+        console.log("Code resent, redirecting to confirm signup");
+        router.push(`/confirm-signup?email=${data.email}`);
+      } else {
+        console.log("Login successful, updating user state");
+        await setCurrentUser();
+        console.log("User state updated, redirecting to dashboard");
+        router.push("/dashboard");
       }
     },
     [router, setCurrentUser]
