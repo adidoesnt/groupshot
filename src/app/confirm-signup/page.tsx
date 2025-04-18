@@ -53,29 +53,25 @@ export default function ConfirmSignup() {
     async (data: z.infer<typeof confirmSignupSchema>) => {
       console.log("Submitting confirm signup form", data);
 
-      try {
-        if (!email) {
-          throw new Error("Email is required");
-        }
-
-        await confirmSignUp({
-          username: email,
-          confirmationCode: data.code,
-        });
-
-        console.log("Signup confirmed, creating user in database");
-
-        await createUser({
-          id: id as string, // schema validation should catch if null
-          email,
-          firstName: firstName as string, // schema validation should catch if null
-          lastName: lastName as string, // schema validation should catch if null
-        } satisfies CreateUserRequest);
-
-        router.push("/login");
-      } catch (error) {
-        console.error(`Error confirming signup for email ${email}`, error);
+      if (!email) {
+        throw new Error("Email is required");
       }
+
+      await confirmSignUp({
+        username: email,
+        confirmationCode: data.code,
+      });
+
+      console.log("Signup confirmed, creating user in database");
+
+      await createUser({
+        id: id as string, // schema validation should catch if null
+        email,
+        firstName: firstName as string, // schema validation should catch if null
+        lastName: lastName as string, // schema validation should catch if null
+      } satisfies CreateUserRequest);
+
+      router.push("/login");
     },
     [email, router, createUser, id, firstName, lastName]
   );
