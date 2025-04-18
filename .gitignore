@@ -42,4 +42,4 @@ next-env.d.ts
 
 # postgres/prisma
 prisma/postgres-data
-src/generated/prisma
+src/app/prisma
