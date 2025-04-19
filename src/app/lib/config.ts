@@ -44,6 +44,11 @@ const config = {
       },
     },
   },
+  onboarding: {
+    title: "Onboarding Checklist",
+    description:
+      "You're almost there! The remaining steps in your onboarding process can be seen below.",
+  },
 };
 
 export default config;
