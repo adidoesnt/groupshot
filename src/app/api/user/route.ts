@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createUser, getUserById } from "@/app/lib/server/database/user";
 import { createUserSchema, UserWithOnboarding } from "./types";
+import { getJson } from "../utils";
 
 // These endpoints should be protected by the middleware in src/middleware.ts
 
@@ -29,7 +30,7 @@ export const POST = async (request: NextRequest) => {
       updatedAt: null, // defaults to now
     });
 
-    return NextResponse.json(user);
+    return NextResponse.json(getJson(user));
   } catch (error) {
     console.error("Error creating user", error);
     return NextResponse.json(
@@ -68,7 +69,7 @@ export const GET = async (request: NextRequest) => {
 
     console.log("Fetched user", user);
 
-    return NextResponse.json(user);
+    return NextResponse.json(getJson(user));
   } catch (error) {
     console.error("Error getting user", error);
     return NextResponse.json({ error: "Error getting user" }, { status: 500 });

@@ -3,12 +3,42 @@ import prisma from "./prisma";
 
 export const createUser = async (user: User) => {
   console.log("Creating user", user);
-  const newUser = await prisma.user.create({
-    data: user,
-  });
 
-  console.log("Created user", newUser);
-  return newUser;
+  return await prisma.$transaction(async (tx) => {
+    const newUser = await tx.user.create({
+      data: user,
+    });
+
+    const onboardingSteps = await tx.onboardingStep.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    const onboarding = await tx.onboarding.create({
+      data: {
+        userId: newUser.id,
+        steps: {
+          createMany: {
+            data: onboardingSteps.map((step) => ({
+              name: step.name,
+              stepId: step.id,
+            })),
+          },
+        },
+      },
+    });
+
+    console.log("Created user", {
+      user: newUser,
+      onboarding,
+    });
+
+    return {
+      user: newUser,
+      onboarding,
+    };
+  });
 };
 
 export const getUserById = async (id: string, include?: Prisma.UserInclude) => {
