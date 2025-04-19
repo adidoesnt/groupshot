@@ -13,6 +13,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"
   },
+  "prisma": {
+    "seed": "bun run prisma/seed.ts"
+  },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.5.8",
     "@hookform/resolvers": "^5.0.1",
