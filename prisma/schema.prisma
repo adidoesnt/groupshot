@@ -134,8 +134,9 @@ enum OnboardingStepName {
 }
 
 model OnboardingStep {
-  id   BigInt             @id @default(autoincrement())
-  name OnboardingStepName
+  id          BigInt             @id @default(autoincrement())
+  name        OnboardingStepName
+  description String?
 
   required Boolean @default(true)
 

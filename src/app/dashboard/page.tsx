@@ -21,7 +21,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!onboardingComplete) {
-      router.push(`/onboarding?id=${userProfile?.id}`);
+      router.push(`/onboarding`);
     }
   }, [onboardingComplete, router, userProfile]);
 

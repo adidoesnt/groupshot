@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Card from "../lib/components/Card";
 import config from "../lib/config";
+import OnboardingChecklist from "./components/OnboardingChecklist";
 
 const { onboarding } = config;
 
@@ -41,10 +42,10 @@ export default function Onboarding() {
           description={{
             text: onboarding.description,
             className: "text-primary-action font-sans",
-          }}
+          }}  
           className="bg-background-alt"
         >
-          <p>Placeholder</p>
+          <OnboardingChecklist onboarding={userProfile?.onboarding} />
         </Card>
       </div>
     </main>

@@ -6,18 +6,22 @@ async function main() {
   const onboardingStepsInOrder = [
     {
       name: OnboardingStepName.UPLOAD_PROFILE_PICTURE,
+      description: "Upload a profile picture",
       required: true,
     },
     {
       name: OnboardingStepName.CHOOSE_PLAN,
+      description: "Choose a plan",
       required: true,
     },
     {
       name: OnboardingStepName.ADD_FRIENDS,
+      description: "Add friends",
       required: false,
     },
     {
       name: OnboardingStepName.GENERATE_FIRST_PHOTO,
+      description: "Generate your first photo",
       required: false,
     },
   ];

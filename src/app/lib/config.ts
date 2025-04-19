@@ -48,6 +48,20 @@ const config = {
     title: "Onboarding Checklist",
     description:
       "You're almost there! The remaining steps in your onboarding process can be seen below.",
+    links: {
+      uploadProfilePicture: {
+        href: "/onboarding/upload-profile-picture",
+      },
+      choosePlan: {
+        href: "/onboarding/choose-plan",
+      },
+      addFriends: {
+        href: "/onboarding/add-friends",
+      },
+      generateFirstPhoto: {
+        href: "/onboarding/generate-first-photo",
+      },
+    },
   },
 };
 
