@@ -57,12 +57,16 @@ export const GET = async (request: NextRequest) => {
     const user = (await getUserById(id, {
       onboarding: {
         include: {
-          steps: true,
+          steps: {
+            include: {
+              step: true,
+            },
+          },
         },
       },
     })) as UserWithOnboarding;
 
-    console.log("User with onboarding", user);
+    console.log("Fetched user", user);
 
     return NextResponse.json(user);
   } catch (error) {

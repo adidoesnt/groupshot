@@ -1,4 +1,9 @@
-import { Onboarding, OnboardingStep, User } from "@/app/prisma";
+import {
+  Onboarding,
+  OnboardingStep,
+  OnboardingStepInstance,
+  User,
+} from "@/app/prisma";
 import { z } from "zod";
 
 // Create user
@@ -15,6 +20,8 @@ export type CreateUserRequest = z.infer<typeof createUserSchema>;
 
 export type UserWithOnboarding = User & {
   onboarding: Onboarding & {
-    steps: OnboardingStep[];
+    steps: (OnboardingStepInstance & {
+      step: OnboardingStep;
+    })[];
   };
 };
