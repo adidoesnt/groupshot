@@ -15,7 +15,7 @@ model User {
   firstName String
   lastName  String
 
-  onboardingCompleted Boolean? @default(false)
+  onboarding Onboarding?
 
   subscriptions UserSubscription[]
 
@@ -99,11 +99,11 @@ model UserSubscription {
   userId         String
   subscriptionId String
 
-  startDate      DateTime
-  endDate        DateTime?
-  cancelledAt    DateTime?
+  startDate   DateTime
+  endDate     DateTime?
+  cancelledAt DateTime?
 
-  status         SubscriptionStatus
+  status SubscriptionStatus
 
   user         User         @relation(fields: [userId], references: [id])
   subscription Subscription @relation(fields: [subscriptionId], references: [id])
@@ -112,4 +112,37 @@ model UserSubscription {
   updatedAt DateTime @updatedAt
 
   @@id([userId, subscriptionId, status]) // composite primary key
+}
+
+model Onboarding {
+  id String @id
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  steps OnboardingStep[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OnboardingStepName {
+  UPLOAD_PROFILE_PICTURE
+  CHOOSE_PLAN
+  ADD_FRIENDS
+  GENERATE_FIRST_PHOTO
+}
+
+model OnboardingStep {
+  name OnboardingStepName
+
+  onboardingId String
+  onboarding   Onboarding @relation(fields: [onboardingId], references: [id])
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([onboardingId, name]) // composite primary key
 }

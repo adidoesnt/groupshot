@@ -1,4 +1,4 @@
-import { User } from "@/app/prisma";
+import { Prisma, User } from "@/app/prisma";
 import prisma from "./prisma";
 
 export const createUser = async (user: User) => {
@@ -11,12 +11,13 @@ export const createUser = async (user: User) => {
   return newUser;
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string, include?: Prisma.UserInclude) => {
   console.log("Getting user by ID", id);
   const user = await prisma.user.findUnique({
     where: {
       id,
     },
+    include,
   });
 
   console.log("Fetched user", user);

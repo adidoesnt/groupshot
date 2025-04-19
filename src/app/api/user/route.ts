@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createUser, getUserById } from "@/app/lib/server/database/user";
-import { createUserSchema } from "./types";
+import { createUserSchema, UserWithOnboarding } from "./types";
 
 // These endpoints should be protected by the middleware in src/middleware.ts
 
@@ -24,7 +24,6 @@ export const POST = async (request: NextRequest) => {
       email,
       firstName,
       lastName,
-      onboardingCompleted: null, // defaults to false
       profilePictureUrl: null,
       createdAt: null, // defaults to now
       updatedAt: null, // defaults to now
@@ -55,7 +54,15 @@ export const GET = async (request: NextRequest) => {
       );
     }
 
-    const user = await getUserById(id);
+    const user = (await getUserById(id, {
+      onboarding: {
+        include: {
+          steps: true,
+        },
+      },
+    })) as UserWithOnboarding;
+
+    console.log("User with onboarding", user);
 
     return NextResponse.json(user);
   } catch (error) {

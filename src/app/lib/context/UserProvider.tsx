@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@/app/prisma";
 import {
   createContext,
   useState,
@@ -10,8 +9,9 @@ import {
   useContext,
 } from "react";
 import { useAuth } from "./AmplifyProvider";
+import { UserWithOnboarding } from "@/app/api/user/types";
 
-export type UserProfile = User;
+export type UserProfile = UserWithOnboarding;
 
 type UserContextType = {
   setUserProfile: (userProfile: UserProfile) => void;

@@ -1,3 +1,4 @@
+import { Onboarding, OnboardingStep, User } from "@/app/prisma";
 import { z } from "zod";
 
 // Create user
@@ -9,3 +10,11 @@ export const createUserSchema = z.object({
 });
 
 export type CreateUserRequest = z.infer<typeof createUserSchema>;
+
+// Get user
+
+export type UserWithOnboarding = User & {
+  onboarding: Onboarding & {
+    steps: OnboardingStep[];
+  };
+};
