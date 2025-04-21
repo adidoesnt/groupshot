@@ -14,7 +14,11 @@ export async function getUser() {
   const dbUser = (await getUserById(authUser.userId, {
     onboarding: {
       include: {
-        steps: true,
+        steps: {
+          include: {
+            step: true,
+          },
+        },
       },
     },
   })) as UserWithOnboarding;
