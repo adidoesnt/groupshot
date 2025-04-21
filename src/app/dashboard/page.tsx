@@ -1,29 +1,9 @@
-"use client";
 
-import { useAuth } from "../lib/context/AmplifyProvider";
-import StatefulSidebar from "../lib/components/StatefulSidebar";
-import { useUserProfile } from "../lib/context/UserProvider";
-import { useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import StatefulSidebar from "@/app/lib/components/StatefulSidebar";
+import { getUser } from "@/app/actions/getUser";
 
-export default function Dashboard() {
-  const { getCurrentUser } = useAuth();
-  const user = getCurrentUser();
-
-  const { getUserProfile } = useUserProfile();
-  const userProfile = getUserProfile();
-
-  const onboardingComplete = useMemo(() => {
-    return userProfile?.onboarding?.steps.every((step) => step.completedAt);
-  }, [userProfile]);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!onboardingComplete) {
-      router.push(`/onboarding`);
-    }
-  }, [onboardingComplete, router, userProfile]);
+export default async function Dashboard() {
+  const user = await getUser();
 
   return (
     <main className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">

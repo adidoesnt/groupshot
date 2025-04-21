@@ -7,7 +7,6 @@ import {
   fetchAuthSession,
 } from "aws-amplify/auth/server";
 import { authConfig } from "../../constants";
-import { getUserById } from "../database/user";
 
 export const { runWithAmplifyServerContext } = createServerRunner({
   config: {
@@ -39,8 +38,6 @@ export const getCurrentUser = async () => {
       operation: (contextSpec) => fetchAuthSession(contextSpec),
     });
 
-    const dbUser = await getUserById(authUser.userId);
-
     const groups = (session.tokens?.accessToken.payload["cognito:groups"] ||
       []) as string[];
     const isAdmin = groups.includes("admin");
@@ -48,7 +45,6 @@ export const getCurrentUser = async () => {
     return {
       ...authUser,
       ...userAttributes,
-      ...dbUser,
       isAdmin,
     };
   } catch (error) {
