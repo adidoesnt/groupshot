@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { checkIsAuthenticated } from "./app/lib/server/auth/amplify";
-import { NextServer } from "@aws-amplify/adapter-nextjs";
+import { getCurrentUser } from "./app/lib/server/auth/amplify";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,12 +8,7 @@ export async function middleware(request: NextRequest) {
   const adminPaths = ["/admin"];
 
   try {
-    const context: NextServer.Context = {
-      request,
-      response: new Response(),
-    };
-
-    const user = await checkIsAuthenticated(context);
+    const user = await getCurrentUser();
 
     if (!user && !publicPaths.includes(pathname)) {
       console.log("User is not authenticated, redirecting to login");

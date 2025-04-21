@@ -1,6 +1,13 @@
-import { createServerRunner, NextServer } from "@aws-amplify/adapter-nextjs";
-import { getCurrentUser, fetchAuthSession } from "aws-amplify/auth/server";
+import { cookies } from "next/headers";
+import { createServerRunner } from "@aws-amplify/adapter-nextjs";
+import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
+import {
+  getCurrentUser as getCurrentAuthUser,
+  fetchUserAttributes,
+  fetchAuthSession,
+} from "aws-amplify/auth/server";
 import { authConfig } from "../../constants";
+import { getUserById } from "../database/user";
 
 export const { runWithAmplifyServerContext } = createServerRunner({
   config: {
@@ -8,29 +15,43 @@ export const { runWithAmplifyServerContext } = createServerRunner({
   },
 });
 
-export const checkIsAuthenticated = async (context: NextServer.Context) => {
-  return await runWithAmplifyServerContext({
-    nextServerContext: context,
-    operation: async (contextSpec) => {
-      try {
-        const session = await fetchAuthSession(contextSpec);
-        console.log("Fetched session", session);
-        if (!session.tokens) return null;
+export const cookiesClient = generateServerClientUsingCookies({
+  config: {
+    Auth: authConfig,
+  },
+  cookies,
+});
 
-        const groups = (session.tokens.accessToken.payload["cognito:groups"] ||
-          []) as string[];
+export const getCurrentUser = async () => {
+  try {
+    const authUser = await runWithAmplifyServerContext({
+      nextServerContext: { cookies },
+      operation: (contextSpec) => getCurrentAuthUser(contextSpec),
+    });
 
-        const user = {
-          ...(await getCurrentUser(contextSpec)),
-          isAdmin: groups.includes("admin"),
-        };
+    const userAttributes = await runWithAmplifyServerContext({
+      nextServerContext: { cookies },
+      operation: (contextSpec) => fetchUserAttributes(contextSpec),
+    });
 
-        console.log("Fetched user", user);
-        return user;
-      } catch (error) {
-        console.error("Error checking if user is authenticated", error);
-        return null;
-      }
-    },
-  });
+    const session = await runWithAmplifyServerContext({
+      nextServerContext: { cookies },
+      operation: (contextSpec) => fetchAuthSession(contextSpec),
+    });
+
+    const dbUser = await getUserById(authUser.userId);
+
+    const groups = (session.tokens?.accessToken.payload["cognito:groups"] ||
+      []) as string[];
+    const isAdmin = groups.includes("admin");
+
+    return {
+      ...authUser,
+      ...userAttributes,
+      ...dbUser,
+      isAdmin,
+    };
+  } catch (error) {
+    console.error(error);
+  }
 };
