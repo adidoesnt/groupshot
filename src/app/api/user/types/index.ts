@@ -25,3 +25,17 @@ export type UserWithOnboarding = User & {
     })[];
   };
 };
+
+// Update user
+export const updateUserSchema = z.object({
+  id: z.string().min(1),
+  updates: z.object({
+    profilePictureUrl: z.string().min(1).optional(),
+  }),
+});
+
+export type UpdateUserRequest = z.infer<typeof updateUserSchema>;
+
+export type UpdateUserRequestParams = {
+  id: string;
+};

@@ -53,3 +53,12 @@ export const getUserById = async (id: string, include?: Prisma.UserInclude) => {
   console.log("Fetched user", user);
   return user;
 };
+
+export const updateUser = async (id: string, updates: Prisma.UserUpdateInput) => {
+  console.log("Updating user", id, updates);
+
+  return await prisma.user.update({
+    where: { id },
+    data: updates,
+  });
+};
