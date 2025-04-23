@@ -5,12 +5,20 @@ import ImageUpload from "@/app/lib/components/ImageUpload";
 import StatefulSidebar from "@/app/lib/components/StatefulSidebar";
 import { useCallback, useMemo, useState } from "react";
 import { cn } from "@/app/lib/utils/cn";
-import { useAuth } from "@/app/lib/context/AmplifyProvider";
 import { S3CommandType } from "@/app/lib/server/storage/s3";
+import { OnboardingStepName } from "@/app/prisma";
+import { useUserProfile } from "@/app/lib/context/UserProvider";
+
+const STEP_NAME = OnboardingStepName.UPLOAD_PROFILE_PICTURE;
 
 export default function UploadProfilePicture() {
-  const { getCurrentUser } = useAuth();
-  const userId = useMemo(() => getCurrentUser()?.userId, [getCurrentUser]);
+  const { getUserProfile } = useUserProfile();
+  const user = useMemo(() => getUserProfile(), [getUserProfile]);
+  const userId = useMemo(() => user?.id, [user]);
+  const onboardingId = useMemo(
+    () => user?.onboarding?.id,
+    [user?.onboarding?.id]
+  );
 
   const [image, setImage] = useState<File | null>(null);
 
@@ -28,12 +36,11 @@ export default function UploadProfilePicture() {
   }, []);
 
   const key = useMemo(() => {
-    if (!image) return null;
-
+    if (!hasUploadedImage) return null;
     if (!userId) throw new Error("User not found");
 
     return `profile-pictures/${userId}`;
-  }, [image, userId]);
+  }, [hasUploadedImage, userId]);
 
   const getPresignedUrl = useCallback(
     async (key: string, type: S3CommandType) => {
@@ -51,6 +58,14 @@ export default function UploadProfilePicture() {
     const data = await response.json();
     return data.url;
   }, []);
+
+  const updateOnboardingStep = useCallback(async () => {
+    const now = new Date();
+    await fetch(`/api/onboarding/${onboardingId}/${STEP_NAME}`, {
+      method: "PUT",
+      body: JSON.stringify({ updates: { completedAt: now } }),
+    });
+  }, [onboardingId]);
 
   const updateUserProfilePictureUrl = useCallback(async () => {
     try {
@@ -70,7 +85,10 @@ export default function UploadProfilePicture() {
     }
   }, [userId, key, getS3Url]);
 
-  // TODO: Update onboarding state for user after uploading profile picture
+  const onUploadComplete = useCallback(async () => {
+    await updateUserProfilePictureUrl();
+    await updateOnboardingStep();
+  }, [updateOnboardingStep, updateUserProfilePictureUrl]);
 
   return (
     <div className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
@@ -87,7 +105,7 @@ export default function UploadProfilePicture() {
             onCancel={() => setImage(null)}
             getPresignedUrl={getPresignedUrl}
             objectKey={key!}
-            onUploadComplete={updateUserProfilePictureUrl}
+            onUploadComplete={onUploadComplete}
           />
         )}
       </div>
