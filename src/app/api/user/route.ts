@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   createUser,
-  getUserById,
 } from "@/app/lib/server/database/user";
 import {
   createUserSchema,
-  UserWithOnboarding,
 } from "./types";
 import { getJson } from "../utils";
 
@@ -45,39 +43,5 @@ export const POST = async (request: NextRequest) => {
         status: (error as Error & { status: number }).status ?? 500,
       }
     );
-  }
-};
-
-// Get user
-export const GET = async (request: NextRequest) => {
-  try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const user = (await getUserById(id, {
-      onboarding: {
-        include: {
-          steps: {
-            include: {
-              step: true,
-            },
-          },
-        },
-      },
-    })) as UserWithOnboarding;
-
-    console.log("Fetched user", user);
-
-    return NextResponse.json(getJson(user));
-  } catch (error) {
-    console.error("Error getting user", error);
-    return NextResponse.json({ error: "Error getting user" }, { status: 500 });
   }
 };

@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       const currentUser = getCurrentUser();
 
       if (currentUser) {
-        fetch(`/api/user?id=${currentUser.userId}`)
+        fetch(`/api/user/${currentUser.userId}`)
           .then((res) => {
             if (res.ok) {
               res.json().then((data) => {

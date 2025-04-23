@@ -17,6 +17,9 @@ export const createUserSchema = z.object({
 export type CreateUserRequest = z.infer<typeof createUserSchema>;
 
 // Get user
+export type GetUserRequestParams = {
+  id: string;
+};
 
 export type UserWithOnboarding = User & {
   onboarding: Onboarding & {
