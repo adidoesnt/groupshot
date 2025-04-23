@@ -5,7 +5,7 @@ import {
   OnboardingStepName,
 } from "@/app/prisma";
 import Link from "next/link";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo  } from "react";
 import config from "@/app/lib/config";
 
 const {
@@ -97,9 +97,10 @@ export default function OnboardingChecklist({
   const { steps } = onboarding;
 
   return (
-    <div className="flex flex-col gap-4">
-      {steps.map((step, index) => (
-        <div key={step.stepId} className="flex items-center gap-2">
+    <>
+      <div className="flex flex-col gap-4">
+        {steps.map((step, index) => (
+          <div key={step.stepId} className="flex items-center gap-2">
           <span className="text-text-link font-medium">{index + 1}.</span>
           {getStepDisabled(step) ? (
             <span className="text-text-link underline opacity-50 cursor-not-allowed">
@@ -114,5 +115,6 @@ export default function OnboardingChecklist({
         </div>
       ))}
     </div>
+    </>
   );
 }
