@@ -9,3 +9,23 @@ services:
       - 5433:5432 # Can't use 5432 because psql service is already running on port 5432 on my machine
     volumes:
       - ./prisma/postgres-data:/var/lib/postgresql/data
+    
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - 4566:4566
+    environment:
+      - AWS_DEFAULT_REGION=eu-west-2
+      - AWS_ACCESS_KEY_ID=dummy-key-id
+      - AWS_SECRET_ACCESS_KEY=dummy-key-secret
+      - SERVICES=s3
+      - PERSISTENCE=1
+      - DEBUG=1
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./localstack/localstack-data:/var/lib/localstack
+
+networks:
+  groupshot-network:
+    driver: bridge

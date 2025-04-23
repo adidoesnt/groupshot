@@ -31,7 +31,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.envrc
 
 # vercel
 .vercel
@@ -43,3 +44,6 @@ next-env.d.ts
 # postgres/prisma
 prisma/postgres-data
 src/app/prisma
+
+# localstack
+localstack/localstack-data

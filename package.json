@@ -12,7 +12,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "bunx prisma db seed"
+    "prisma:seed": "bunx prisma db seed",
+    "localstack:init": "chmod +x localstack/scripts/init.sh && localstack/scripts/init.sh"
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"
