@@ -70,6 +70,8 @@ export default function UploadProfilePicture() {
     }
   }, [userId, key, getS3Url]);
 
+  // TODO: Update onboarding state for user after uploading profile picture
+
   return (
     <div className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
       <StatefulSidebar />
