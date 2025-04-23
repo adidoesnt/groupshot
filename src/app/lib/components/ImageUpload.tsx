@@ -5,18 +5,25 @@ import Card from "@/app/lib/components/Card";
 type ImageUploadProps = {
   handleUpload: (file: File) => void;
   className?: string;
+  title?: string;
+  description?: string;
 };
 
-export default function ImageUpload({ handleUpload, className }: ImageUploadProps) {
+export default function ImageUpload({
+  handleUpload,
+  className,
+  title,
+  description,
+}: ImageUploadProps) {
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <Card
         title={{
-          text: "Upload Profile Picture",
+          text: title ?? "Upload Image",
           className: "text-text-primary font-mono",
         }}
         description={{
-          text: "Upload a profile picture to your account",
+          text: description ?? "Upload an image.",
           className: "text-primary-action font-sans",
         }}
         className="bg-background-alt"

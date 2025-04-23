@@ -8,10 +8,19 @@ import { cn } from "@/app/lib/utils/cn";
 import { S3CommandType } from "@/app/lib/server/storage/s3";
 import { OnboardingStepName } from "@/app/prisma";
 import { useUserProfile } from "@/app/lib/context/UserProvider";
+import { useRouter } from "next/navigation";
+import config from "@/app/lib/config";
 
 const STEP_NAME = OnboardingStepName.UPLOAD_PROFILE_PICTURE;
+const {
+  onboarding: {
+    pages: { uploadProfilePicture },
+  },
+} = config;
 
 export default function UploadProfilePicture() {
+  const router = useRouter();
+
   const { getUserProfile } = useUserProfile();
   const user = useMemo(() => getUserProfile(), [getUserProfile]);
   const userId = useMemo(() => user?.id, [user]);
@@ -88,7 +97,12 @@ export default function UploadProfilePicture() {
   const onUploadComplete = useCallback(async () => {
     await updateUserProfilePictureUrl();
     await updateOnboardingStep();
-  }, [updateOnboardingStep, updateUserProfilePictureUrl]);
+
+    setTimeout(() => {
+      setImage(null);
+      router.push("/onboarding");
+    }, 3000);
+  }, [updateOnboardingStep, updateUserProfilePictureUrl, router]);
 
   return (
     <div className="grid w-[100dvw] h-[100dvh] bg-background text-foreground place-items-center">
@@ -98,7 +112,13 @@ export default function UploadProfilePicture() {
           "items-center": !hasUploadedImage,
         })}
       >
-        {!hasUploadedImage && <ImageUpload handleUpload={handleDpUpload} />}
+        {!hasUploadedImage && (
+          <ImageUpload
+            handleUpload={handleDpUpload}
+            title={uploadProfilePicture.title}
+            description={uploadProfilePicture.description}
+          />
+        )}
         {hasUploadedImage && (
           <ImageCropper
             imageUrl={imageUrl!}
@@ -106,6 +126,8 @@ export default function UploadProfilePicture() {
             getPresignedUrl={getPresignedUrl}
             objectKey={key!}
             onUploadComplete={onUploadComplete}
+            successMessage={uploadProfilePicture.successMessage}
+            errorMessage={uploadProfilePicture.errorMessage}
           />
         )}
       </div>

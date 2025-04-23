@@ -62,6 +62,15 @@ const config = {
         href: "/onboarding/generate-first-photo",
       },
     },
+    pages: {
+      uploadProfilePicture: {
+        title: "Upload Profile Picture",
+        description: "Upload a profile picture for your account.",
+        successMessage:
+          "Profile picture uploaded successfully, redirecting to onboarding page...",
+        errorMessage: "Failed to upload profile picture, please try again.",
+      },
+    },
   },
 };
 

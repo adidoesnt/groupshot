@@ -4,6 +4,7 @@ import { cn } from "@/app/lib/utils/cn";
 import { Area } from "react-easy-crop";
 import Button from "./Button";
 import { S3CommandType } from "@/app/lib/server/storage/s3";
+import Message from "./Message";
 
 type ImageCropperProps = {
   imageUrl: string;
@@ -12,6 +13,8 @@ type ImageCropperProps = {
   objectKey: string;
   onUploadComplete?: () => Promise<void>;
   className?: string;
+  successMessage?: string;
+  errorMessage?: string;
 };
 
 export default function ImageCropper({
@@ -21,10 +24,16 @@ export default function ImageCropper({
   objectKey,
   onUploadComplete,
   className,
+  successMessage,
+  errorMessage,
 }: ImageCropperProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "error" | "success";
+    message: string;
+  } | null>(null);
 
   const handleZoomChange = useCallback((zoom: number) => {
     setZoom(zoom);
@@ -89,7 +98,10 @@ export default function ImageCropper({
 
       if (!blob) throw new Error("Failed to create blob");
 
-      const presignedUrl = await getPresignedUrl(objectKey, S3CommandType.PutObject);
+      const presignedUrl = await getPresignedUrl(
+        objectKey,
+        S3CommandType.PutObject
+      );
       const uploadResponse = await fetch(presignedUrl, {
         method: "PUT",
         body: blob,
@@ -99,16 +111,33 @@ export default function ImageCropper({
         throw new Error("Failed to upload image");
       }
 
+      setMessage({
+        type: "success",
+        message: successMessage ?? "Image saved successfully",
+      });
+
       if (onUploadComplete) {
         await onUploadComplete();
       }
     } catch (error) {
       console.error("Error saving image:", error);
-      // TODO: Add error handling UI
+      setMessage({
+        type: "error",
+        message: errorMessage ?? "Failed to save image",
+      });
     } finally {
       setIsUploading(false);
     }
-  }, [imageUrl, crop, zoom, objectKey, getPresignedUrl, onUploadComplete]);
+  }, [
+    imageUrl,
+    crop,
+    zoom,
+    objectKey,
+    getPresignedUrl,
+    onUploadComplete,
+    successMessage,
+    errorMessage,
+  ]);
 
   return (
     <div className={cn("flex flex-col gap-4 w-full max-w-2xl", className)}>
@@ -144,6 +173,13 @@ export default function ImageCropper({
             className="w-full h-2 bg-background-alt rounded-lg appearance-none cursor-pointer"
           />
         </div>
+        {message && (
+          <Message
+            type={message.type}
+            message={message.message}
+            className="mt-2"
+          />
+        )}
         <div className="flex gap-2 justify-end">
           <Button
             onClick={onCancel}
