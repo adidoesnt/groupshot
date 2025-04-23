@@ -3,6 +3,7 @@ type ButtonProps = {
   onClick: () => void;
   children?: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -10,11 +11,13 @@ export default function Button({
   onClick,
   children,
   className,
+  disabled,
 }: ButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center gap-2 cursor-pointer ${className}`}
+      disabled={disabled}
+      className={`flex items-center justify-center gap-2 cursor-pointer ${className} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {icon}
       {children}
