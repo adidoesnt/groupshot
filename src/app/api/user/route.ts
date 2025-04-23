@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  createUser,
-} from "@/app/lib/server/database/user";
-import {
-  createUserSchema,
-} from "./types";
-import { getJson } from "../utils";
+import { createUser } from "@/app/lib/server/database/user";
+import { createUserSchema } from "./types";
+import { getJson } from "../../lib/utils/json";
 
 // These endpoints should be protected by the middleware in src/middleware.ts
 

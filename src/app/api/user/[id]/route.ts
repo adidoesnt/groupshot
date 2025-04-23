@@ -6,7 +6,7 @@ import {
   updateUserSchema,
   UserWithOnboarding,
 } from "../types";
-import { getJson } from "../../utils";
+import { getJson } from "../../../lib/utils/json";
 
 // Update user
 export const PUT = async (
