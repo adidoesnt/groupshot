@@ -24,7 +24,7 @@ export const OpenButton = ({ toggleSidebar }: SidebarButtonProps) => {
     <Button
       icon={<HamburgerIcon className="w-4 h-4" />}
       onClick={toggleSidebar}
-      className="hover:bg-gray-200 rounded-sm transition-all duration-300 p-2 fixed top-4 left-4 md:opacity-30 hover:opacity-100"
+      className="hover:bg-gray-200 bg-gray-200 md:bg-transparent rounded-sm transition-all duration-300 p-2 fixed top-4 left-4 md:opacity-30 hover:opacity-100"
     />
   );
 };

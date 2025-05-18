@@ -70,6 +70,10 @@ const config = {
           "Profile picture uploaded successfully, redirecting to onboarding page...",
         errorMessage: "Failed to upload profile picture, please try again.",
       },
+      choosePlan: {
+        title: "Plans",
+        description: "Choose the plan thats right for you.",
+      },
     },
   },
 };
